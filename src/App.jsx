@@ -1,5 +1,5 @@
-import React from "react";
-import {GameProvider} from './components/contexts/GameContext';
+import React from 'react';
+import { GameProvider } from './contexts/GameContext';
 import GameBoard from './components/GameBoard/GameBoard';
 import './App.css';
 
@@ -8,11 +8,10 @@ function App() {
     <GameProvider>
       <div className="app">
         <h1>Animal Memory Game</h1>
-        <GameBoard></GameBoard>
+        <GameBoard />
       </div>
     </GameProvider>
-  )
-  
+  );
 }
 
 export default App;

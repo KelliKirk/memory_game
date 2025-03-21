@@ -1,16 +1,14 @@
 import React, { useEffect } from 'react';
-import { useGameContext } from '../contexts/GameContext';
-import useGameData from '../hooks/useGameData';
+import { useGameContext } from '../../contexts/GameContext';
+import useGameData from '../../hooks/useGameData';
 import Card from '../Card/Card';
 import ScoreBoard from '../ScoreBoard/ScoreBoard';
 import GameSettings from '../GameSettings/GameSettings';
 import './GameBoard.css';
 
-
 const GameBoard = () => {
   const { state } = useGameContext();
   const { handleCardClick, initializeGame, resetGame } = useGameData();
-
 
   // Log game activity
   useEffect(() => {
@@ -21,7 +19,6 @@ const GameBoard = () => {
       totalPairs: state.cardCount / 2
     });
   }, [state.score, state.moves, state.matchedPairs.length, state.cardCount]);
-
 
   // Get grid class based on card count
   const getGridClass = () => {
@@ -39,7 +36,6 @@ const GameBoard = () => {
     }
   };
 
-
   return (
     <div className="game-board">
       {!state.gameStarted ? (
@@ -47,10 +43,10 @@ const GameBoard = () => {
       ) : (
         <div className="game-content">
           <ScoreBoard />
-         
+          
           <div className={`cards-grid ${getGridClass()}`}>
             {state.cards.map(card => (
-              <Card
+              <Card 
                 key={card.id}
                 id={card.id}
                 content={card.content}
@@ -60,22 +56,22 @@ const GameBoard = () => {
               />
             ))}
           </div>
-         
+          
           <div className="game-controls">
             <button onClick={initializeGame} className="restart-button">
               Restart Game
             </button>
-           
+            
             <button onClick={resetGame} className="settings-button">
               Change Settings
             </button>
           </div>
-         
+          
           {state.gameOver && (
             <div className="game-over">
               <h3>Congratulations!</h3>
               <p>You completed the game in {state.moves} moves with a score of {state.score}!</p>
-             
+              
               {state.loading ? (
                 <p>Saving your score...</p>
               ) : (
@@ -97,6 +93,5 @@ const GameBoard = () => {
     </div>
   );
 };
-
 
 export default GameBoard;
