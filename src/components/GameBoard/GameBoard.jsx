@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { useGameContext } from '../../contexts/GameContext';
-import useGameData from '../../hooks/useGameData';
+import { useGameContext } from '../contexts/GameContext';
+import useGameData from '../hooks/useGameData';
 import Card from '../Card/Card';
 import ScoreBoard from '../ScoreBoard/ScoreBoard';
 import GameSettings from '../GameSettings/GameSettings';

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import { useGameContext } from '../../contexts/GameContext';
-import useGameData from '../../hooks/useGameData';
+import { useGameContext } from '../contexts/GameContext';
+import useGameData from '../hooks/useGameData';
 import './GameSettings.css';
 
 
