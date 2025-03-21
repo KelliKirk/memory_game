@@ -1,23 +1,18 @@
+import React from "react";
+import {GameProvider} from './components/contexts/GameContext';
+import GameBoard from './components/GameBoard/GameBoard';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <GameProvider>
+      <div className="app">
+        <h1>Animal Memory Game</h1>
+        <GameBoard></GameBoard>
+      </div>
+    </GameProvider>
+  )
+  
 }
 
 export default App;
