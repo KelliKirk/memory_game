@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGameContext } from '../../contexts/GameContext';
 import useGameData from '../../hooks/useGameData';
 import Card from '../Card/Card';
@@ -9,6 +9,7 @@ import './GameBoard.css';
 const GameBoard = () => {
   const { state } = useGameContext();
   const { handleCardClick, initializeGame, resetGame } = useGameData();
+  const [showCompletionPopup, setShowCompletionPopup] = useState(false);
 
   // Log game activity
   useEffect(() => {
@@ -19,6 +20,13 @@ const GameBoard = () => {
       totalPairs: state.cardCount / 2
     });
   }, [state.score, state.moves, state.matchedPairs.length, state.cardCount]);
+
+  // Show completion popup when game is complete
+  useEffect(() => {
+    if (state.gameOver && !showCompletionPopup) {
+      setShowCompletionPopup(true);
+    }
+  }, [state.gameOver, showCompletionPopup]);
 
   // Get grid class based on card count
   const getGridClass = () => {
@@ -34,6 +42,16 @@ const GameBoard = () => {
       default:
         return 'grid-cols-4';
     }
+  };
+
+  const handlePlayAgain = () => {
+    setShowCompletionPopup(false);
+    initializeGame();
+  };
+
+  const handleBackToSettings = () => {
+    setShowCompletionPopup(false);
+    resetGame();
   };
 
   return (
@@ -67,25 +85,21 @@ const GameBoard = () => {
             </button>
           </div>
           
-          {state.gameOver && (
-            <div className="game-over">
-              <h3>Congratulations!</h3>
-              <p>You completed the game in {state.moves} moves with a score of {state.score}!</p>
-              
-              {state.loading ? (
-                <p>Saving your score...</p>
-              ) : (
-                <div className="high-scores">
-                  <h4>High Scores</h4>
-                  <ul>
-                    {state.highScores.slice(0, 5).map(score => (
-                      <li key={score.id}>
-                        {score.score} points - {score.difficulty} difficulty
-                      </li>
-                    ))}
-                  </ul>
+
+          {showCompletionPopup && (
+            <div className="popup">
+              <div className="popup-content">
+                <h3 className="popup-title">Well done!</h3>
+                <p className="popup-message">All the cards have been matched.</p>
+                <div className="popup-buttons">
+                  <button onClick={handlePlayAgain} className="popup-button primary-button">
+                    Play Again
+                  </button>
+                  <button onClick={handleBackToSettings} className="popup-button secondary-button">
+                    Back to Settings
+                  </button>
                 </div>
-              )}
+              </div>
             </div>
           )}
         </div>

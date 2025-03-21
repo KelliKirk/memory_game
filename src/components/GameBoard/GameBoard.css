@@ -132,6 +132,7 @@
   
   .popup-button {
     padding: 10px;
+    margin: 10px;
     background: #1e40af;
     color: white;
     border: none;
