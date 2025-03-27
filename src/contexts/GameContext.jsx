@@ -1,7 +1,6 @@
 import React, { createContext, useReducer, useContext, useEffect } from 'react';
 import { fetchHighScores, saveScore } from '../services/api';
 
-
 // Initial state
 const initialState = {
   cards: [],
@@ -18,13 +17,13 @@ const initialState = {
   error: null
 };
 
-
 // Action types
 const actionTypes = {
   INITIALIZE_GAME: 'INITIALIZE_GAME',
   FLIP_CARD: 'FLIP_CARD',
   MATCH_CARDS: 'MATCH_CARDS',
   RESET_FLIPPED: 'RESET_FLIPPED',
+  RESET_FLIPPED_WITH_PENALTY: 'RESET_FLIPPED_WITH_PENALTY',
   INCREMENT_MOVES: 'INCREMENT_MOVES',
   SET_GAME_OVER: 'SET_GAME_OVER',
   CHANGE_DIFFICULTY: 'CHANGE_DIFFICULTY',
@@ -34,7 +33,6 @@ const actionTypes = {
   SET_LOADING: 'SET_LOADING',
   SET_ERROR: 'SET_ERROR'
 };
-
 
 // Reducer function
 const gameReducer = (state, action) => {
@@ -73,6 +71,17 @@ const gameReducer = (state, action) => {
     case actionTypes.RESET_FLIPPED:
       return {
         ...state,
+        cards: state.cards.map(card =>
+          (card.id === action.payload.firstCardId || card.id === action.payload.secondCardId) && !card.matched
+            ? { ...card, flipped: false }
+            : card
+        ),
+        flippedCards: []
+      };
+    case actionTypes.RESET_FLIPPED_WITH_PENALTY:
+      return {
+        ...state,
+        score: Math.max(0, state.score - action.payload.penalty),
         cards: state.cards.map(card =>
           (card.id === action.payload.firstCardId || card.id === action.payload.secondCardId) && !card.matched
             ? { ...card, flipped: false }
@@ -127,21 +136,18 @@ const gameReducer = (state, action) => {
   }
 };
 
-
-// Create context
+// Create Context
 const GameContext = createContext();
 
-
-// Context provider component
-export const GameProvider = ({ children }) => {
+// GameProvider Component
+const GameProvider = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
-
-  // Fetch high scores on component mount
+  // Fetch high scores when the provider mounts
   useEffect(() => {
-    const getHighScores = async () => {
-      dispatch({ type: actionTypes.SET_LOADING, payload: true });
+    const loadHighScores = async () => {
       try {
+        dispatch({ type: actionTypes.SET_LOADING, payload: true });
         const scores = await fetchHighScores();
         dispatch({ type: actionTypes.SET_HIGH_SCORES, payload: scores });
       } catch (error) {
@@ -149,33 +155,8 @@ export const GameProvider = ({ children }) => {
       }
     };
 
-
-    getHighScores();
+    loadHighScores();
   }, []);
-
-
-  // Save score when game is over
-  useEffect(() => {
-    const saveUserScore = async () => {
-      if (state.gameOver) {
-        try {
-          await saveScore({
-            score: state.score,
-            moves: state.moves,
-            difficulty: state.difficulty,
-            cardCount: state.cardCount,
-            date: new Date()
-          });
-        } catch (error) {
-          console.error("Failed to save score:", error);
-        }
-      }
-    };
-
-
-    saveUserScore();
-  }, [state.gameOver, state.score, state.moves, state.difficulty, state.cardCount]);
-
 
   return (
     <GameContext.Provider value={{ state, dispatch, actionTypes }}>
@@ -184,9 +165,8 @@ export const GameProvider = ({ children }) => {
   );
 };
 
-
-// Custom hook for using the game context
-export const useGameContext = () => {
+// Custom Hook to use Game Context
+const useGameContext = () => {
   const context = useContext(GameContext);
   if (!context) {
     throw new Error('useGameContext must be used within a GameProvider');
@@ -194,3 +174,4 @@ export const useGameContext = () => {
   return context;
 };
 
+export { gameReducer, actionTypes, GameProvider, useGameContext };

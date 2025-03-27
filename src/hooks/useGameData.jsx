@@ -89,11 +89,18 @@ const useGameData = () => {
           dispatch({ type: actionTypes.SET_GAME_OVER });
         }
       } else {
-        // Cards don't match, flip them back after a delay
+        // Cards don't match, subtract points
+        const pointDeduction = 10 * difficultySettings[state.difficulty].scoreMultiplier;
+        
+        // Dispatch action to reset flipped cards and subtract points
         setTimeout(() => {
           dispatch({
-            type: actionTypes.RESET_FLIPPED,
-            payload: { firstCardId, secondCardId }
+            type: actionTypes.RESET_FLIPPED_WITH_PENALTY,
+            payload: { 
+              firstCardId, 
+              secondCardId,
+              penalty: pointDeduction
+            }
           });
         }, difficultySettings[state.difficulty].matchTime);
       }
@@ -131,4 +138,3 @@ const useGameData = () => {
 
 
 export default useGameData;
-
