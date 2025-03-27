@@ -7,7 +7,7 @@ function App() {
   return (
     <GameProvider>
       <div className="app">
-        <h1>Animal Memory Game</h1>
+        <h1>Memory Game</h1>
         <GameBoard />
       </div>
     </GameProvider>

@@ -5,6 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url(https://cdn.pixabay.com/photo/2015/01/07/16/37/wood-591631_1280.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 code {
