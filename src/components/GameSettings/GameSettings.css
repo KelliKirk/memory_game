@@ -37,7 +37,7 @@
   .start-button {
     width: 100%;
     padding: 12px;
-    background-color: #1e40af;
+    background-color: #640d14;;
     color: white;
     border: none;
     border-radius: 4px;
@@ -47,5 +47,5 @@
   }
   
   .start-button:hover {
-    background-color: #1e3a8a;
+    background-color: #9e1621;;
   }
