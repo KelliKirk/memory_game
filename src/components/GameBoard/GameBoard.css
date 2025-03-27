@@ -44,12 +44,12 @@
   }
   
   .restart-button {
-    background-color: #1e40af;
+    background-color: #4b5563;
     color: white;
   }
   
   .restart-button:hover {
-    background-color: #1e3a8a;
+    background-color: #374151;
   }
   
   .settings-button {
