@@ -7,7 +7,7 @@ import GameSettings from '../GameSettings/GameSettings';
 import './GameBoard.css';
 
 const GameBoard = () => {
-  const { state } = useGameContext();
+  const { state, dispatch, actionTypes } = useGameContext();
   const { handleCardClick, initializeGame, resetGame } = useGameData();
   const [showCompletionPopup, setShowCompletionPopup] = useState(false);
 
@@ -23,10 +23,10 @@ const GameBoard = () => {
 
   // Show completion popup when game is complete
   useEffect(() => {
-    if (state.gameOver && !showCompletionPopup) {
+    if (state.gameOver) {
       setShowCompletionPopup(true);
     }
-  }, [state.gameOver, showCompletionPopup]);
+  }, [state.gameOver]);
 
   // Get grid class based on card count
   const getGridClass = () => {
@@ -45,13 +45,20 @@ const GameBoard = () => {
   };
 
   const handlePlayAgain = () => {
-    setShowCompletionPopup(false);
+    // First, set gameOver to false to prevent popup from showing
+    dispatch({ type: actionTypes.SET_GAME_OVER, payload: false });
+    
+    // Then initialize the game
     initializeGame();
+    
+    // Ensure popup is hidden
+    setShowCompletionPopup(false);
   };
 
   const handleBackToSettings = () => {
-    setShowCompletionPopup(false);
+    // Reset game state and hide popup
     resetGame();
+    setShowCompletionPopup(false);
   };
 
   return (
@@ -91,6 +98,10 @@ const GameBoard = () => {
               <div className="popup-content">
                 <h3 className="popup-title">Well done!</h3>
                 <p className="popup-message">All the cards have been matched.</p>
+                <div className="popup-stats">
+                  <p>Score: {state.score}</p>
+                  <p>Moves: {state.moves}</p>
+                </div>
                 <div className="popup-buttons">
                   <button onClick={handlePlayAgain} className="popup-button primary-button">
                     Play Again
